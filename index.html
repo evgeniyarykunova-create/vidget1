@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generador de preguntas a partir de imagen</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #fff3e6;
+    margin: 0;
+    padding: 10px;
+  }
+  h2 {
+    text-align: center;
+    color: #d35400;
+  }
+  #image-container {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  #image-container img {
+    max-width: 100%;
+    border-radius: 10px;
+  }
+  #questions {
+    margin-top: 15px;
+    padding: 0;
+    list-style-type: decimal;
+  }
+  li {
+    margin-bottom: 8px;
+    background: #f9e0d9;
+    padding: 8px;
+    border-radius: 5px;
+  }
+  button {
+    background-color: #e67e22;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 5px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  button:hover {
+    background-color: #d35400;
+  }
+</style>
+</head>
+<body>
+
+<h2>Generador de preguntas a partir de imagen</h2>
+
+<div id="image-container">
+  <input type="file" id="image-input" accept="image/*">
+  <br>
+  <img id="uploaded-image" src="" alt="" style="display:none;">
+</div>
+
+<button id="generate-questions">Generar preguntas</button>
+
+<ol id="questions"></ol>
+
+<script>
+const questionsPool = [
+  "¿Qué están haciendo las personas?",
+  "¿Qué crees que han pedido de comer?",
+  "¿Has estado en un lugar así?",
+  "Describe la ropa de las personas.",
+  "Imagina una conversación entre los clientes.",
+  "¿Qué hora del día crees que es?",
+  "¿Qué emociones parecen tener las personas?",
+  "Si fueras uno de ellos, ¿qué harías?",
+  "Describe el ambiente del lugar.",
+  "¿Qué objetos llaman más tu atención y por qué?"
+];
+
+// Загрузка картинки
+const imageInput = document.getElementById('image-input');
+const uploadedImage = document.getElementById('uploaded-image');
+
+imageInput.addEventListener('change', function() {
+  const file = this.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      uploadedImage.src = e.target.result;
+      uploadedImage.style.display = 'block';
+    }
+    reader.readAsDataURL(file);
+  }
+});
+
+// Генерация вопросов
+const generateBtn = document.getElementById('generate-questions');
+const questionsList = document.getElementById('questions');
+
+generateBtn.addEventListener('click', function() {
+  questionsList.innerHTML = '';
+  const shuffled = questionsPool.sort(() => 0.5 - Math.random());
+  const selected = shuffled.slice(0, 5); // выбираем 5 случайных вопросов
+  selected.forEach(q => {
+    const li = document.createElement('li');
+    li.textContent = q;
+    questionsList.appendChild(li);
+  });
+});
+</script>
+
+</body>
+</html>
