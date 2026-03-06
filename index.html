@@ -5,50 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Generador de preguntas a partir de imagen</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #fff3e6;
-    margin: 0;
-    padding: 10px;
-  }
-  h2 {
-    text-align: center;
-    color: #d35400;
-  }
-  #image-container {
-    text-align: center;
-    margin-bottom: 10px;
-  }
-  #image-container img {
-    max-width: 100%;
-    border-radius: 10px;
-  }
-  #questions {
-    margin-top: 15px;
-    padding: 0;
-    list-style-type: decimal;
-  }
-  li {
-    margin-bottom: 8px;
-    background: #f9e0d9;
-    padding: 8px;
-    border-radius: 5px;
-  }
-  button {
-    background-color: #e67e22;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 5px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  button:hover {
-    background-color: #d35400;
-  }
+  body { font-family: Arial, sans-serif; background: #fff3e6; margin: 0; padding: 10px; }
+  h2 { text-align: center; color: #d35400; }
+  #image-container { text-align: center; margin-bottom: 10px; }
+  #image-container img { max-width: 100%; border-radius: 10px; }
+  #questions { margin-top: 15px; padding: 0; list-style-type: decimal; }
+  li { margin-bottom: 8px; background: #f9e0d9; padding: 8px; border-radius: 5px; }
+  button { background-color: #e67e22; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; display: block; margin: 10px auto; }
+  button:hover { background-color: #d35400; }
 </style>
 </head>
 <body>
@@ -66,22 +30,41 @@
 <ol id="questions"></ol>
 
 <script>
-const questionsPool = [
-  "¿Qué están haciendo las personas?",
-  "¿Qué crees que han pedido de comer?",
-  "¿Has estado en un lugar así?",
-  "Describe la ropa de las personas.",
-  "Imagina una conversación entre los clientes.",
-  "¿Qué hora del día crees que es?",
-  "¿Qué emociones parecen tener las personas?",
-  "Si fueras uno de ellos, ¿qué harías?",
-  "Describe el ambiente del lugar.",
-  "¿Qué objetos llaman más tu atención y por qué?"
-];
+const questionsPool = {
+  personas: [
+    "¿Qué están haciendo las personas?",
+    "¿Qué emociones parecen tener las personas?",
+    "Describe la ropa de las personas.",
+    "Si fueras uno de ellos, ¿qué harías?",
+    "¿Cuántas personas crees que hay?"
+  ],
+  ambiente: [
+    "¿Qué hora del día crees que es?",
+    "Describe el ambiente del lugar.",
+    "¿Hace buen tiempo o mal tiempo?",
+    "¿Es un lugar tranquilo o ruidoso?",
+    "¿Qué estación del año podría ser?"
+  ],
+  objetos: [
+    "¿Qué objetos llaman más tu atención y por qué?",
+    "¿Qué comida o bebida ves en la imagen?",
+    "¿Hay algo inusual o curioso?",
+    "Describe los muebles o estructuras visibles.",
+    "¿Qué tipo de edificio o lugar es?"
+  ],
+  situacion: [
+    "Imagina una conversación entre las personas.",
+    "¿Qué podría haber pasado antes de esta escena?",
+    "¿Qué podría pasar después?",
+    "Crea un pequeño diálogo entre los personajes.",
+    "Si fueras testigo, ¿qué dirías?"
+  ]
+};
 
-// Загрузка картинки
 const imageInput = document.getElementById('image-input');
 const uploadedImage = document.getElementById('uploaded-image');
+const generateBtn = document.getElementById('generate-questions');
+const questionsList = document.getElementById('questions');
 
 imageInput.addEventListener('change', function() {
   const file = this.files[0];
@@ -95,19 +78,22 @@ imageInput.addEventListener('change', function() {
   }
 });
 
-// Генерация вопросов
-const generateBtn = document.getElementById('generate-questions');
-const questionsList = document.getElementById('questions');
+function getRandomQuestion(categoryArray) {
+  const index = Math.floor(Math.random() * categoryArray.length);
+  return categoryArray.splice(index, 1)[0]; // удаляем выбранный вопрос, чтобы не повторялся
+}
 
 generateBtn.addEventListener('click', function() {
   questionsList.innerHTML = '';
-  const shuffled = questionsPool.sort(() => 0.5 - Math.random());
-  const selected = shuffled.slice(0, 5); // выбираем 5 случайных вопросов
-  selected.forEach(q => {
+  const tempPool = JSON.parse(JSON.stringify(questionsPool)); // копия, чтобы не терять оригинал
+
+  // Берём по одному вопросу из каждой категории
+  for (let cat in tempPool) {
+    const q = getRandomQuestion(tempPool[cat]);
     const li = document.createElement('li');
     li.textContent = q;
     questionsList.appendChild(li);
-  });
+  }
 });
 </script>
 
