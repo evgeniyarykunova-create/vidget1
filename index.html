@@ -1,145 +1,93 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
-
+<title>Emoji Sentence Challenge</title>
 <style>
-
 body{
-margin:0;
-overflow:hidden;
+    font-family: Arial, sans-serif;
+    text-align:center;
+    background:#f4f6fb;
+    padding:20px;
 }
 
-/* контейнер лупы */
-
-#magnifier{
-position:fixed;
-width:220px;
-height:220px;
-pointer-events:none;
-display:none;
-z-index:99999;
+h2{
+    margin-bottom:10px;
 }
 
-/* стеклянная линза */
-
-#magnifierLens{
-width:220px;
-height:220px;
-border-radius:50%;
-overflow:hidden;
-position:absolute;
-
-border:5px solid #2c2c2c;
-
-background:
-radial-gradient(circle at 30% 30%, rgba(255,255,255,0.45), rgba(255,255,255,0.05) 40%, rgba(0,0,0,0.15));
-
-box-shadow:
-0 12px 30px rgba(0,0,0,0.35),
-inset 0 0 20px rgba(0,0,0,0.25),
-inset 0 0 40px rgba(255,255,255,0.15);
+#emojiBox{
+    font-size:50px;
+    margin:25px 0;
+    min-height:70px;
 }
 
-/* содержимое увеличения */
-
-#magnifierContent{
-position:absolute;
-transform-origin:top left;
+button{
+    padding:10px 18px;
+    font-size:16px;
+    border:none;
+    border-radius:8px;
+    background:#4a6cff;
+    color:white;
+    cursor:pointer;
 }
 
-/* ручка лупы */
-
-#magnifierHandle{
-
-position:absolute;
-width:120px;
-height:22px;
-
-background:linear-gradient(90deg,#444,#222);
-
-border-radius:12px;
-
-bottom:-55px;
-left:150px;
-
-transform:rotate(45deg);
-
-box-shadow:
-inset 0 0 8px rgba(255,255,255,0.2),
-0 6px 10px rgba(0,0,0,0.4);
-
+button:hover{
+    background:#324ed6;
 }
 
+#sentence{
+    margin-top:20px;
+    width:80%;
+    max-width:400px;
+    padding:10px;
+    font-size:16px;
+    border-radius:6px;
+    border:1px solid #ccc;
+}
 </style>
 </head>
 
 <body>
 
-<div id="magnifier">
+<h2>Emoji Sentence Challenge</h2>
+<p>Посмотри на эмодзи и составь предложение.</p>
 
-<div id="magnifierLens">
-<div id="magnifierContent"></div>
-</div>
+<div id="emojiBox"></div>
 
-<div id="magnifierHandle"></div>
+<button onclick="generateEmojis()">Новые эмодзи</button>
 
-</div>
+<br>
+
+<input id="sentence" placeholder="Напиши предложение..." />
 
 <script>
 
-let zoom = 2.5
-const SIZE = 220
-const TARGET = ".zoomable"
+const emojiList = [
+"😀","😂","😍","🤔","😴","😎","🥳",
+"🍎","🍕","🍔","🍦","🍩",
+"🐶","🐱","🐸","🐵",
+"⚽","🏀","🎸","🎮",
+"🚗","✈️","🚲",
+"🌞","🌧️","❄️",
+"🏫","📚","💡",
+"❤️","⭐","🔥"
+];
 
-const magnifier = document.getElementById("magnifier")
-const content = document.getElementById("magnifierContent")
+function generateEmojis(){
 
-document.addEventListener("mousemove", e => {
+let count = Math.floor(Math.random()*4)+3; // 3–6
+let result = [];
 
-const el = document.elementFromPoint(e.clientX,e.clientY)
+for(let i=0;i<count;i++){
+let randomEmoji = emojiList[Math.floor(Math.random()*emojiList.length)];
+result.push(randomEmoji);
+}
 
-if(!el || !el.closest(TARGET)){
-
-magnifier.style.display="none"
-return
+document.getElementById("emojiBox").textContent = result.join(" ");
 
 }
 
-const target = el.closest(TARGET)
-
-magnifier.style.display="block"
-
-magnifier.style.left = (e.clientX - SIZE/2) + "px"
-magnifier.style.top = (e.clientY - SIZE/2) + "px"
-
-const rect = target.getBoundingClientRect()
-
-const clone = target.cloneNode(true)
-
-content.innerHTML=""
-content.appendChild(clone)
-
-content.style.transform = `scale(${zoom})`
-
-const offsetX = e.clientX - rect.left
-const offsetY = e.clientY - rect.top
-
-content.style.left = -(offsetX * zoom - SIZE/2) + "px"
-content.style.top = -(offsetY * zoom - SIZE/2) + "px"
-
-})
-
-/* zoom колесом мыши */
-
-document.addEventListener("wheel", e => {
-
-zoom += e.deltaY * -0.001
-
-if(zoom < 1) zoom = 1
-if(zoom > 6) zoom = 6
-
-})
+generateEmojis();
 
 </script>
 
